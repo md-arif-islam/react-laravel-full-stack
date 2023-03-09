@@ -1,9 +1,35 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import axiosClient from "../../axios-client";
+import { useStateContext } from "../../context/ContextProvider";
 import "./login.scss";
 
 const Login = () => {
+    const email = useRef();
+    const password = useRef();
+    const { setUser, setToken } = useStateContext();
+
+    const [message, setMessage] = useState(null);
+
     const onSubmit = (e) => {
         e.preventDefault();
+
+        const paylod = {
+            email: email.current.value,
+            password: password.current.value,
+        };
+
+        axiosClient
+            .post("/login", paylod)
+            .then(({ data }) => {
+                setUser(data.user);
+                setToken(data.token);
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response && response.status === 422) {
+                    setMessage(response.data.message);
+                }
+            });
     };
 
     return (
@@ -13,6 +39,20 @@ const Login = () => {
                     <div className="login__form--title text-center">Log In</div>
                     <form onSubmit={onSubmit}>
                         <div className="form-row">
+                            {message && (
+                                <div className="col col-12">
+                                    <h5
+                                        style={{
+                                            backgroundColor: "red",
+                                            color: "#fff",
+                                            padding: "10px",
+                                        }}
+                                        className="text-center"
+                                    >
+                                        {message}
+                                    </h5>
+                                </div>
+                            )}
                             <div className="col col-12">
                                 <label className="input">
                                     <i
@@ -24,6 +64,7 @@ const Login = () => {
                                         name="email"
                                         placeholder="Email"
                                         required
+                                        ref={email}
                                     />
                                 </label>
                             </div>
@@ -36,6 +77,7 @@ const Login = () => {
                                         name="password"
                                         placeholder="Password"
                                         required
+                                        ref={password}
                                     />
                                     <i
                                         id="pwd"
@@ -44,9 +86,6 @@ const Login = () => {
                                 </label>
                             </div>
 
-                            {/* <h5 className="text-center">
-                Email, Password & Role Doesn't match Or Something is Wrong
-              </h5> */}
                             <div className="col col-12">
                                 <input type="submit" value="Submit" />
                             </div>
@@ -55,24 +94,24 @@ const Login = () => {
                     <div className="login__form--title--semi text-center">
                         Or
                     </div>
-                    <div className="icons text-center">
+                    <div className="social_icons text-center">
                         <button
                             type="button"
-                            class="btn btn-rounded btn-icon google"
+                            className="btn btn-rounded btn-icon google"
                         >
-                            <i class="fab fa-google"></i>
+                            <i className="fab fa-google"></i>
                         </button>
                         <button
                             type="button"
-                            class="btn btn-rounded btn-icon github"
+                            className="btn btn-rounded btn-icon github"
                         >
-                            <i class="fab fa-github"></i>
+                            <i className="fab fa-github"></i>
                         </button>
                         <button
                             type="button"
-                            class="btn btn-rounded btn-icon facebook"
+                            className="btn btn-rounded btn-icon facebook"
                         >
-                            <i class="fab fa-facebook"></i>
+                            <i className="fab fa-facebook"></i>
                         </button>
                     </div>
                 </div>

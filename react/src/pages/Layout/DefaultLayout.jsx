@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import axiosClient from "../../axios-client";
 import { useStateContext } from "../../context/ContextProvider";
 import Sidebar from "../Sidebar/Sidebar";
 import Topbar from "../Topbar/Topbar";
 
 const DefaultLayout = () => {
-    const { user, token } = useStateContext();
+    const { user, token, setUser } = useStateContext();
 
     if (!token) {
         return <Navigate to="/login" />;
     }
+
+    useEffect(() => {
+        axiosClient.get("/user").then(({ data }) => {
+            setUser(data);
+        });
+    }, []);
 
     return (
         <>

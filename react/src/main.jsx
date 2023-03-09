@@ -6,11 +6,14 @@ import { BrowserRouter } from "react-router-dom";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
+import { ContextProvider } from "./context/ContextProvider";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>
-            <App />
+            <ContextProvider>
+                <App />
+            </ContextProvider>
         </BrowserRouter>
     </React.StrictMode>
 );

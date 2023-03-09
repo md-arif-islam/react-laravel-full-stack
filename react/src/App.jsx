@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.scss";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Layout from "./pages/Layout/Layout";
 import Login from "./pages/Login/Login";
 import AddManager from "./pages/Managers/AddManager";
 import UpdateManager from "./pages/Managers/UpdateManager";
@@ -14,12 +13,14 @@ import AddSalesman from "./pages/Salesmen/addSalesman";
 import UpdateSalesman from "./pages/Salesmen/UpdateSalesman";
 import Profile from "./pages/Profile/Profile";
 import UpdateProfile from "./pages/Profile/UpdateProfile";
+import DefaultLayout from "./pages/Layout/DefaultLayout";
+import GuestLayout from "./pages/Layout/GuestLayout";
 
 function App() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Layout />}>
+                <Route path="/" element={<DefaultLayout />}>
                     <Route index element={<Dashboard />} />
                     <Route path="/managers" element={<Managers />} />
                     <Route path="/managers/add" element={<AddManager />} />
@@ -48,7 +49,10 @@ function App() {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/profile/update" element={<UpdateProfile />} />
                 </Route>
-                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<GuestLayout />}>
+                    <Route index element={<Login />} />
+                    <Route path="/login" element={<Login />} />
+                </Route>
             </Routes>
         </>
     );

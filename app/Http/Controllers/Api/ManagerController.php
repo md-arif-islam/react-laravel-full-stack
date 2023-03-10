@@ -31,9 +31,11 @@ class ManagerController extends Controller {
 
         $data = $request->validated();
         $data['password'] = bcrypt( $data['password'] );
+        $data['role'] = "manager";
         $user = User::create( $data );
 
         return response( new UserResource( $user ), 201 );
+
     }
 
     /**
@@ -42,9 +44,9 @@ class ManagerController extends Controller {
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show( User $user ) {
+    public function show( User $user, $id ) {
 
-        return new UserResource( $user );
+        return new UserResource( $user->where( 'id', $id )->firstOrFail() );
 
     }
 
@@ -55,15 +57,15 @@ class ManagerController extends Controller {
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update( UpdateUserRequest $request, User $user ) {
+    public function update( UpdateUserRequest $request, User $user, $id ) {
 
         $data = $request->validated();
         if ( isset( $data['password'] ) ) {
             $data['password'] = bcrypt( $data['password'] );
         }
-        $user->update( $data );
+        $user->where( "id", $id )->update( $data );
 
-        return new UserResource( $user );
+        return new UserResource( $user->where( 'id', $id )->firstOrFail() );
     }
 
     /**
@@ -72,9 +74,9 @@ class ManagerController extends Controller {
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy( User $user ) {
+    public function destroy( User $user, $id ) {
 
-        $user->delete();
+        $user->where( "id", $id )->delete();
         return response( "", 204 );
     }
 }

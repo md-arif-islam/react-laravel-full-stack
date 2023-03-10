@@ -14,44 +14,72 @@ class DatabaseSeeder extends Seeder {
      */
     public function run() {
         /* User::create( [
-    'first_name' => 'Admin',
-    'last_name' => 'User',
-    'email' => 'admin@user.com',
-    'phone' => '1234567891',
-    'password' => Hash::make( 'password' ),
-    'avatar' => '',
-    'role' => 'admin',
-    ] );
+        'first_name' => 'Admin',
+        'last_name' => 'User',
+        'email' => 'admin@user.com',
+        'phone' => '1234567891',
+        'password' => Hash::make( 'password' ),
+        'avatar' => '',
+        'role' => 'admin',
+        ] );
 
-    User::create( [
-    'first_name' => 'Manager',
-    'last_name' => 'User',
-    'email' => 'manager@user.com',
-    'phone' => '1234567892',
-    'password' => Hash::make( 'password' ),
-    'avatar' => '',
-    'role' => 'manager',
-    ] );
+        User::create( [
+        'first_name' => 'Manager',
+        'last_name' => 'User',
+        'email' => 'manager@user.com',
+        'phone' => '1234567892',
+        'password' => Hash::make( 'password' ),
+        'avatar' => '',
+        'role' => 'manager',
+        ] );
 
-    User::create( [
-    'first_name' => 'Pharmacist',
-    'last_name' => 'User',
-    'email' => 'pharmacist@user.com',
-    'phone' => '1234567893',
-    'password' => Hash::make( 'password' ),
-    'avatar' => '',
-    'role' => 'pharmacist',
-    ] );
+        User::create( [
+        'first_name' => 'Pharmacist',
+        'last_name' => 'User',
+        'email' => 'pharmacist@user.com',
+        'phone' => '1234567893',
+        'password' => Hash::make( 'password' ),
+        'avatar' => '',
+        'role' => 'pharmacist',
+        ] );
 
-    User::create( [
-    'first_name' => 'Salesman',
-    'last_name' => 'User',
-    'email' => 'salesman@user.com',
-    'phone' => '1234567894',
-    'password' => Hash::make( 'password' ),
-    'avatar' => '',
-    'role' => 'salesman',
-    ] ); */
+        User::create( [
+        'first_name' => 'Salesman',
+        'last_name' => 'User',
+        'email' => 'salesman@user.com',
+        'phone' => '1234567894',
+        'password' => Hash::make( 'password' ),
+        'avatar' => '',
+        'role' => 'salesman',
+        ] ); */
+/*
+User::create( [
+'first_name' => 'Manager 4',
+'last_name' => 'User',
+'email' => 'manager@user.com',
+'phone' => '1234567892',
+'password' => Hash::make( 'password' ),
+'avatar' => '',
+'role' => 'manager',
+] );
+User::create( [
+'first_name' => 'Manager',
+'last_name' => 'User',
+'email' => 'manager@user.com',
+'phone' => '1234567892',
+'password' => Hash::make( 'password' ),
+'avatar' => '',
+'role' => 'manager',
+] );
+User::create( [
+'first_name' => 'Manager',
+'last_name' => 'User',
+'email' => 'manager@user.com',
+'phone' => '1234567892',
+'password' => Hash::make( 'password' ),
+'avatar' => '',
+'role' => 'manager',
+] ); */
 
     }
 }

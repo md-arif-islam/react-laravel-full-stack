@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosClient from "../../axios-client";
 import avatar from "../../assets/img/avatar.png";
 
 const AddManager = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    const [message, setMessage] = useState(null);
 
     function handleImageClick() {
         document.getElementById("pimgi").click();
     }
+
+    const onChange = () => {
+        document.getElementById("pimg").src = window.URL.createObjectURL(
+            this.files[0]
+        );
+    };
 
     function handlePasswordClick() {
         setShowPassword(!showPassword);
@@ -19,6 +29,36 @@ const AddManager = () => {
         input.focus();
     }
 
+    const first_name = useRef();
+    const last_name = useRef();
+    const email = useRef();
+    const phone = useRef();
+    const password = useRef();
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        const paylod = {
+            first_name: first_name.current.value,
+            last_name: last_name.current.value,
+            email: email.current.value,
+            phone: phone.current.value,
+            password: password.current.value,
+        };
+
+        axiosClient
+            .post("/managers", paylod)
+            .then(() => {
+                navigate("/managers");
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response && response.status === 422) {
+                    setMessage(response.data.message);
+                }
+            });
+    };
+
     return (
         <div className="manager">
             <div className="addManager">
@@ -26,7 +66,21 @@ const AddManager = () => {
                     <div className="main__form--title text-center">
                         Add New Manager
                     </div>
-                    <form action="#" method="POST">
+                    <form onSubmit={onSubmit}>
+                        {message && (
+                            <div className="col col-12">
+                                <h5
+                                    style={{
+                                        backgroundColor: "red",
+                                        color: "#fff",
+                                        padding: "10px",
+                                    }}
+                                    className="text-center"
+                                >
+                                    {message}
+                                </h5>
+                            </div>
+                        )}
                         <div className="col col-12 text-center pb-3">
                             <img
                                 id="pimg"
@@ -37,7 +91,7 @@ const AddManager = () => {
                             />
                             <i className="fas fa-pen pimgedit" />
                             <input
-                                onChange="document.getElementById('pimg').src = window.URL.createObjectURL(this.files[0])"
+                                onChange={onChange}
                                 id="pimgi"
                                 style={{ display: "none" }}
                                 type="file"
@@ -60,7 +114,7 @@ const AddManager = () => {
                                         type="text"
                                         name="fname"
                                         placeholder="First name"
-                                        required=""
+                                        ref={first_name}
                                     />
                                 </label>
                             </div>
@@ -74,7 +128,8 @@ const AddManager = () => {
                                         type="text"
                                         name="lname"
                                         placeholder="Last Name"
-                                        required=""
+                                        required
+                                        ref={last_name}
                                     />
                                 </label>
                             </div>
@@ -85,7 +140,8 @@ const AddManager = () => {
                                         type="email"
                                         name="email"
                                         placeholder="Email"
-                                        required=""
+                                        required
+                                        ref={email}
                                     />
                                 </label>
                             </div>
@@ -96,7 +152,8 @@ const AddManager = () => {
                                         type="number"
                                         name="phone"
                                         placeholder="Phone"
-                                        required=""
+                                        required
+                                        ref={phone}
                                     />
                                 </label>
                             </div>
@@ -108,7 +165,8 @@ const AddManager = () => {
                                         type="password"
                                         name="password"
                                         placeholder="Password"
-                                        required=""
+                                        required
+                                        ref={password}
                                     />
                                     <i
                                         id="pwd"
@@ -117,11 +175,6 @@ const AddManager = () => {
                                     />
                                 </label>
                             </div>
-                            <input
-                                type="hidden"
-                                name="action"
-                                defaultValue="addManager"
-                            />
                             <div className="col col-12">
                                 <input type="submit" defaultValue="Submit" />
                             </div>

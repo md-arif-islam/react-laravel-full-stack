@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import avatar from "../../assets/img/avatar.png";
+import axiosClient from "../../axios-client";
 
 const Managers = () => {
+    const [loading, setLoading] = useState(false);
+
     function handleDeleteClick() {
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this item?"
@@ -11,6 +14,23 @@ const Managers = () => {
             // handle delete logic
         }
     }
+
+    useEffect(() => {
+        getManagers();
+    }, []);
+
+    const getManagers = () => {
+        setLoading(true);
+        axiosClient
+            .get("/managers")
+            .then(({ data }) => {
+                setLoading(false);
+                console.log(data);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
+    };
 
     return (
         <div className="manager">

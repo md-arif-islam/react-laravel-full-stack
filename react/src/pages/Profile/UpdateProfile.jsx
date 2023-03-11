@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/img/avatar.png";
+import axiosClient from "../../axios-client";
 import { useStateContext } from "../../context/ContextProvider";
 
 const UpdateProfile = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const { user } = useStateContext();
+    const { user, setUser } = useStateContext();
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState(null);
+    const navigate = useNavigate();
 
     function handleImageClick() {
         document.getElementById("pimgi").click();
@@ -27,13 +32,44 @@ const UpdateProfile = () => {
         );
     };
 
+    const first_name = useRef();
+    const last_name = useRef();
+    const email = useRef();
+    const phone = useRef();
+    const password = useRef();
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+
+        const paylod = {
+            first_name: first_name.current.value,
+            last_name: last_name.current.value,
+            email: email.current.value,
+            phone: phone.current.value,
+            password: password.current.value,
+        };
+
+        axiosClient
+            .put(`/profile/${user.id}`, paylod)
+            .then(({ data }) => {
+                setUser(data.data);
+                navigate("/profile");
+            })
+            .catch((err) => {
+                const response = err.response;
+                if (response && response.status === 422) {
+                    setMessage(response.data.message);
+                }
+            });
+    };
+
     return (
         <div className="userProfileEdit">
             <div className="main__form">
                 <div className="main__form--title text-center">
                     Update My Profile
                 </div>
-                <form encType="multipart/form-data" action="#" method="POST">
+                <form onSubmit={onSubmit}>
                     <div className="form-row">
                         <div className="col col-12 text-center pb-3">
                             <img
@@ -66,6 +102,7 @@ const UpdateProfile = () => {
                                     placeholder="First name"
                                     defaultValue={user.first_name}
                                     required
+                                    ref={first_name}
                                 />
                             </label>
                         </div>
@@ -78,6 +115,7 @@ const UpdateProfile = () => {
                                     placeholder="Last Name"
                                     defaultValue={user.last_name}
                                     required
+                                    ref={last_name}
                                 />
                             </label>
                         </div>
@@ -90,6 +128,7 @@ const UpdateProfile = () => {
                                     placeholder="Email"
                                     defaultValue={user.email}
                                     required
+                                    ref={email}
                                 />
                             </label>
                         </div>
@@ -102,6 +141,7 @@ const UpdateProfile = () => {
                                     placeholder="Phone"
                                     defaultValue={user.phone}
                                     required
+                                    ref={phone}
                                 />
                             </label>
                         </div>
@@ -113,6 +153,7 @@ const UpdateProfile = () => {
                                     type="password"
                                     name="password"
                                     placeholder="Password"
+                                    ref={password}
                                 />
                                 <i
                                     id="pwd"

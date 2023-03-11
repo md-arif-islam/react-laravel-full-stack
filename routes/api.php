@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ManagerController;
 use App\Http\Controllers\Api\PharmacistController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SalesmanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,8 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     Route::get( "/salesmen/{id}", [SalesmanController::class, "show"] );
     Route::put( "/salesmen/{id}", [SalesmanController::class, "update"] );
     Route::delete( "/salesmen/{id}", [SalesmanController::class, "destroy"] );
+
+    Route::put( "/profile/{id}", [ProfileController::class, "update"] );
 
     // Route::apiResource( "/managers", ManagerController::class );
 } );

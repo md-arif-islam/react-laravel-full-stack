@@ -20,7 +20,6 @@ const UpdateSalesman = () => {
     let { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
-    const { setNotification } = useStateContext();
 
     const [user, setUser] = useState({
         id: null,
@@ -50,7 +49,6 @@ const UpdateSalesman = () => {
         axiosClient
             .put(`/salesmen/${user.id}`, user)
             .then(() => {
-                setNotification("Upadated Successfully");
                 navigate("/salesmen");
             })
             .catch((err) => {

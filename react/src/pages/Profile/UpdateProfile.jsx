@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import avatar from "../../assets/img/avatar.png";
+import { useStateContext } from "../../context/ContextProvider";
 
 const UpdateProfile = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const { user } = useStateContext();
+
     function handleImageClick() {
         document.getElementById("pimgi").click();
     }
@@ -17,6 +20,12 @@ const UpdateProfile = () => {
         }
         input.focus();
     }
+
+    const onChange = () => {
+        document.getElementById("pimg").src = window.URL.createObjectURL(
+            this.files[0]
+        );
+    };
 
     return (
         <div className="userProfileEdit">
@@ -36,7 +45,7 @@ const UpdateProfile = () => {
                             />
                             <i className="fas fa-pen pimgedit" />
                             <input
-                                onChange="document.getElementById('pimg').src = window.URL.createObjectURL(this.files[0])"
+                                onChange={onChange}
                                 id="pimgi"
                                 style={{ display: "none" }}
                                 type="file"
@@ -55,8 +64,8 @@ const UpdateProfile = () => {
                                     type="text"
                                     name="fname"
                                     placeholder="First name"
-                                    defaultValue="MD Arif"
-                                    required=""
+                                    defaultValue={user.first_name}
+                                    required
                                 />
                             </label>
                         </div>
@@ -67,8 +76,8 @@ const UpdateProfile = () => {
                                     type="text"
                                     name="lname"
                                     placeholder="Last Name"
-                                    defaultValue="Islam"
-                                    required=""
+                                    defaultValue={user.last_name}
+                                    required
                                 />
                             </label>
                         </div>
@@ -79,8 +88,8 @@ const UpdateProfile = () => {
                                     type="email"
                                     name="email"
                                     placeholder="Email"
-                                    defaultValue="arifislamarif344@gmail.com"
-                                    required=""
+                                    defaultValue={user.email}
+                                    required
                                 />
                             </label>
                         </div>
@@ -91,8 +100,8 @@ const UpdateProfile = () => {
                                     type="number"
                                     name="phone"
                                     placeholder="Phone"
-                                    defaultValue={"01704307597"}
-                                    required=""
+                                    defaultValue={user.phone}
+                                    required
                                 />
                             </label>
                         </div>
@@ -102,9 +111,8 @@ const UpdateProfile = () => {
                                 <input
                                     id="pwdinput"
                                     type="password"
-                                    name="oldPassword"
-                                    placeholder="Old Password"
-                                    required=""
+                                    name="password"
+                                    placeholder="Password"
                                 />
                                 <i
                                     id="pwd"
@@ -113,32 +121,6 @@ const UpdateProfile = () => {
                                 />
                             </label>
                         </div>
-                        <div className="col col-12">
-                            <label className="input">
-                                <i id="left" className="fas fa-key" />
-                                <input
-                                    id="pwdinput"
-                                    type="password"
-                                    name="newPassword"
-                                    placeholder="New Password"
-                                    required=""
-                                />
-                                <p>
-                                    Type Old Password if you don't want to
-                                    change
-                                </p>
-                                <i
-                                    id="pwd"
-                                    onClick={handlePasswordClick}
-                                    className="fas fa-eye right"
-                                />
-                            </label>
-                        </div>
-                        <input
-                            type="hidden"
-                            name="action"
-                            defaultValue="updateProfile"
-                        />
                         <div className="col col-12">
                             <input type="submit" defaultValue="Update" />
                         </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import avatar from "../../assets/img/avatar.png";
 import axiosClient from "../../axios-client";
+import { useStateContext } from "../../context/ContextProvider";
 
 const UpdateManager = () => {
     const handleImageClick = () => {
@@ -19,6 +20,8 @@ const UpdateManager = () => {
     let { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
+    const { setNotification } = useStateContext();
+
     const [user, setUser] = useState({
         id: null,
         first_name: "",
@@ -47,6 +50,7 @@ const UpdateManager = () => {
         axiosClient
             .put(`/managers/${user.id}`, user)
             .then(() => {
+                setNotification("Upadated Successfully");
                 navigate("/managers");
             })
             .catch((err) => {

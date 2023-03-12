@@ -5,14 +5,15 @@ import axiosClient from "../../axios-client";
 import { useStateContext } from "../../context/ContextProvider";
 
 const UpdateManager = () => {
+    const [avatarUrl, setAvatarUrl] = useState(null);
     const handleImageClick = () => {
         document.getElementById("pimgi").click();
     };
 
-    const onChange = () => {
-        document.getElementById("pimg").src = window.URL.createObjectURL(
-            this.files[0]
-        );
+    const onChange = (e) => {
+        const file = e.target.files[0];
+        const fileUrl = URL.createObjectURL(file);
+        console.log(fileUrl);
     };
 
     const navigate = useNavigate();
@@ -96,10 +97,10 @@ const UpdateManager = () => {
                                     />
                                     <i className="fas fa-pen pimgedit" />
                                     <input
+                                        type="file"
                                         onChange={onChange}
                                         id="pimgi"
                                         style={{ display: "none" }}
-                                        type="file"
                                         name="avatar"
                                     />
                                 </div>

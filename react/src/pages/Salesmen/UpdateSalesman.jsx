@@ -32,6 +32,9 @@ const UpdateSalesman = () => {
     if (id) {
         useEffect(() => {
             setLoading(true);
+            // how to upload avatar give me full code
+            axiosClient.post;
+
             axiosClient
                 .get(`/salesmen/${id}`)
                 .then(({ data }) => {

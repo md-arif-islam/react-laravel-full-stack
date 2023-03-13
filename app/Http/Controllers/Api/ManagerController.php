@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class ManagerController extends Controller {
     /**
@@ -34,6 +35,15 @@ class ManagerController extends Controller {
         $data['role'] = "manager";
         $user = User::create( $data );
 
+        if ( $request->hasFile( 'avatar' ) ) {
+
+            $avatarPath = time() . '-' . $request->file( 'avatar' )->getClientOriginalName();
+            $request->file( 'avatar' )->storeAs( 'public/avatars', $avatarPath );
+
+            $user->avatar = $avatarPath;
+            $user->save();
+        }
+
         return response( new UserResource( $user ), 201 );
 
     }
@@ -59,13 +69,26 @@ class ManagerController extends Controller {
      */
     public function update( UpdateUserRequest $request, User $user, $id ) {
 
+        $manager = User::find( $id );
         $data = $request->validated();
+
         if ( isset( $data['password'] ) ) {
             $data['password'] = bcrypt( $data['password'] );
         }
-        $user->where( "id", $id )->update( $data );
 
-        return new UserResource( $user->where( 'id', $id )->firstOrFail() );
+        $manager->update( $data );
+
+        if ( $request->hasFile( 'avatar' ) ) {
+
+            $avatarPath = time() . '-' . $request->file( 'avatar' )->getClientOriginalName();
+            $request->file( 'avatar' )->storeAs( 'public/avatars', $avatarPath );
+
+            $manager->avatar = $avatarPath;
+            $manager->save();
+        }
+
+        return new UserResource( $manager->firstOrFail() );
+
     }
 
     /**

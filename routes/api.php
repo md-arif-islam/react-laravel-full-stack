@@ -28,7 +28,7 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     Route::get( "/managers", [ManagerController::class, "index"] );
     Route::post( "/managers", [ManagerController::class, "store"] );
     Route::get( "/managers/{id}", [ManagerController::class, "show"] );
-    Route::put( "/managers/{id}", [ManagerController::class, "update"] );
+    Route::post( "/managers/{id}", [ManagerController::class, "update"] );
     Route::delete( "/managers/{id}", [ManagerController::class, "destroy"] );
 
     Route::get( "/pharmacists", [PharmacistController::class, "index"] );

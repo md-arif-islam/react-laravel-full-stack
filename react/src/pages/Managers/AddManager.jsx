@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import avatar from "../../assets/img/avatar.png";
 
-const AddManager = () => {
+const AddPharmacist = () => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const [message, setMessage] = useState(null);
+    const [file, setFile] = useState(null);
 
     function handleImageClick() {
         document.getElementById("pimgi").click();
     }
 
-    const onChange = () => {
-        document.getElementById("pimg").src = window.URL.createObjectURL(
-            this.files[0]
-        );
+    const onChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
     };
 
     function handlePasswordClick() {
@@ -44,10 +44,17 @@ const AddManager = () => {
             email: email.current.value,
             phone: phone.current.value,
             password: password.current.value,
+            avatar: file,
         };
 
+        console.log(paylod);
+
         axiosClient
-            .post("/managers", paylod)
+            .post("/managers", paylod, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             .then(() => {
                 navigate("/managers");
             })
@@ -61,7 +68,7 @@ const AddManager = () => {
 
     return (
         <div className="manager">
-            <div className="addManager">
+            <div className="addPharmacist">
                 <div className="main__form">
                     <div className="main__form--title text-center">
                         Add New Manager
@@ -84,7 +91,7 @@ const AddManager = () => {
                         <div className="col col-12 text-center pb-3">
                             <img
                                 id="pimg"
-                                src={avatar}
+                                src={file ? URL.createObjectURL(file) : avatar}
                                 className="img-fluid rounded-circle"
                                 onClick={handleImageClick}
                                 alt=""
@@ -186,4 +193,4 @@ const AddManager = () => {
     );
 };
 
-export default AddManager;
+export default AddPharmacist;

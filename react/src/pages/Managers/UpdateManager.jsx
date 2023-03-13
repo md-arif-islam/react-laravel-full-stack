@@ -5,15 +5,26 @@ import axiosClient from "../../axios-client";
 import { useStateContext } from "../../context/ContextProvider";
 
 const UpdateManager = () => {
-    const [avatarUrl, setAvatarUrl] = useState(null);
-    const handleImageClick = () => {
+    const [file, setFile] = useState(null);
+    const [user, setUser] = useState({
+        id: null,
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        avatar: "",
+    });
+    function handleImageClick() {
         document.getElementById("pimgi").click();
-    };
+    }
 
     const onChange = (e) => {
-        const file = e.target.files[0];
-        const fileUrl = URL.createObjectURL(file);
-        console.log(fileUrl);
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+        setUser({
+            ...user,
+            avatar: selectedFile,
+        });
     };
 
     const navigate = useNavigate();
@@ -22,14 +33,6 @@ const UpdateManager = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
     const { setNotification } = useStateContext();
-
-    const [user, setUser] = useState({
-        id: null,
-        first_name: "",
-        last_name: "",
-        email: "",
-        phone: "",
-    });
 
     if (id) {
         useEffect(() => {
@@ -48,8 +51,14 @@ const UpdateManager = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+
+        console.log(user);
         axiosClient
-            .put(`/managers/${user.id}`, user)
+            .post(`/managers/${user.id}`, user, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             .then(() => {
                 setNotification("Upadated Successfully");
                 navigate("/managers");
@@ -65,7 +74,6 @@ const UpdateManager = () => {
     return (
         <div className="manager">
             <div className="updateManager">
-                {console.log(user)}
                 {!loading && (
                     <div className="main__form">
                         <div className="main__form--title text-center">
@@ -90,7 +98,13 @@ const UpdateManager = () => {
                                 <div className="col col-12 text-center pb-3">
                                     <img
                                         id="pimg"
-                                        src={avatar}
+                                        src={
+                                            !file
+                                                ? user.avatar
+                                                    ? `http://localhost:8000/storage/avatars/${user.avatar}`
+                                                    : avatar
+                                                : URL.createObjectURL(file)
+                                        }
                                         className="img-fluid rounded-circle"
                                         onClick={handleImageClick}
                                         alt=""

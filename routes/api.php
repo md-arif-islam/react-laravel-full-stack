@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
+Route::middleware( ['guest'] )->group( function () {
+    Route::post( "/login", [AuthController::class, "login"] );
+} );
+
 Route::middleware( 'auth:sanctum' )->group( function () {
     Route::get( '/user', function ( Request $request ) {
         return $request->user();
@@ -26,10 +30,12 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     Route::post( "/logout", [AuthController::class, "logout"] );
 
     Route::get( "/managers", [ManagerController::class, "index"] );
-    Route::post( "/managers", [ManagerController::class, "store"] );
-    Route::get( "/managers/{id}", [ManagerController::class, "show"] );
-    Route::post( "/managers/{id}", [ManagerController::class, "update"] );
-    Route::delete( "/managers/{id}", [ManagerController::class, "destroy"] );
+    Route::group( ['middleware' => 'can:isAdmin'], function () {
+        Route::post( "/managers", [ManagerController::class, "store"] );
+        Route::get( "/managers/{id}", [ManagerController::class, "show"] );
+        Route::post( "/managers/{id}", [ManagerController::class, "update"] );
+        Route::delete( "/managers/{id}", [ManagerController::class, "destroy"] );
+    } );
 
     Route::get( "/pharmacists", [PharmacistController::class, "index"] );
     Route::post( "/pharmacists", [PharmacistController::class, "store"] );
@@ -45,7 +51,4 @@ Route::middleware( 'auth:sanctum' )->group( function () {
 
     Route::post( "/profile/{id}", [ProfileController::class, "update"] );
 
-    // Route::apiResource( "/salesmen", ManagerController::class );
 } );
-
-Route::post( "/login", [AuthController::class, "login"] );

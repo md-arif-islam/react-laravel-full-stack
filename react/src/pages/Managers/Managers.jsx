@@ -7,6 +7,7 @@ import { useStateContext } from "../../context/ContextProvider";
 const Managers = () => {
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
+    const { isAdmin } = useStateContext();
 
     function onDelete(user) {
         const confirmDelete = window.confirm(
@@ -48,8 +49,12 @@ const Managers = () => {
                                 <th scope="col">Email</th>
                                 <th scope="col">Phone</th>
                                 {/* Only For Admin */}
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
+                                {isAdmin && (
+                                    <>
+                                        <th scope="col">Edit</th>
+                                        <th scope="col">Delete</th>
+                                    </>
+                                )}
                             </tr>
                         </thead>
                         {loading && (
@@ -88,20 +93,28 @@ const Managers = () => {
                                         <td>{user.email}</td>
                                         <td>{user.phone}</td>
                                         {/* Only For Admin */}
-                                        <td>
-                                            <Link to={`/managers/${user.id}`}>
-                                                <i className="fas fa-edit" />
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <Link
-                                                className="delete"
-                                                onClick={(e) => onDelete(user)}
-                                                to="#"
-                                            >
-                                                <i className="fas fa-trash" />
-                                            </Link>
-                                        </td>
+                                        {isAdmin && (
+                                            <>
+                                                <td>
+                                                    <Link
+                                                        to={`/managers/${user.id}`}
+                                                    >
+                                                        <i className="fas fa-edit" />
+                                                    </Link>
+                                                </td>
+                                                <td>
+                                                    <Link
+                                                        className="delete"
+                                                        onClick={(e) =>
+                                                            onDelete(user)
+                                                        }
+                                                        to="#"
+                                                    >
+                                                        <i className="fas fa-trash" />
+                                                    </Link>
+                                                </td>
+                                            </>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>

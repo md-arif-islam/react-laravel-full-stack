@@ -7,6 +7,7 @@ import { useStateContext } from "../../context/ContextProvider";
 const Pharmacists = () => {
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
+    const { isAdmin, isManager } = useStateContext();
 
     function onDelete(user) {
         const confirmDelete = window.confirm(
@@ -47,9 +48,13 @@ const Pharmacists = () => {
                                 <th scope="col">Name</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Phone</th>
-                                {/* Only For Admin */}
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
+                                {(isAdmin || isManager) && (
+                                    <>
+                                        {" "}
+                                        <th scope="col">Edit</th>
+                                        <th scope="col">Delete</th>
+                                    </>
+                                )}
                             </tr>
                         </thead>
                         {loading && (
@@ -87,23 +92,28 @@ const Pharmacists = () => {
                                         </td>
                                         <td>{user.email}</td>
                                         <td>{user.phone}</td>
-                                        {/* Only For Admin */}
-                                        <td>
-                                            <Link
-                                                to={`/pharmacists/${user.id}`}
-                                            >
-                                                <i className="fas fa-edit" />
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <Link
-                                                className="delete"
-                                                onClick={(e) => onDelete(user)}
-                                                to="#"
-                                            >
-                                                <i className="fas fa-trash" />
-                                            </Link>
-                                        </td>
+                                        {(isAdmin || isManager) && (
+                                            <>
+                                                <td>
+                                                    <Link
+                                                        to={`/pharmacists/${user.id}`}
+                                                    >
+                                                        <i className="fas fa-edit" />
+                                                    </Link>
+                                                </td>
+                                                <td>
+                                                    <Link
+                                                        className="delete"
+                                                        onClick={(e) =>
+                                                            onDelete(user)
+                                                        }
+                                                        to="#"
+                                                    >
+                                                        <i className="fas fa-trash" />
+                                                    </Link>
+                                                </td>
+                                            </>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>

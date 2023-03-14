@@ -71,7 +71,11 @@ const Salesmen = () => {
                                                     className="rounded-circle"
                                                     width={40}
                                                     height={40}
-                                                    src={avatar}
+                                                    src={
+                                                        user.avatar
+                                                            ? `http://localhost:8000/storage/avatars/${user.avatar}`
+                                                            : avatar
+                                                    }
                                                     alt=""
                                                 />
                                             </center>

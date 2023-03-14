@@ -23,7 +23,11 @@ const Topbar = () => {
             </div>
             <div className="topber__profile">
                 <img
-                    src={avatar}
+                    src={
+                        user.avatar
+                            ? `http://localhost:8000/storage/avatars/${user.avatar}`
+                            : avatar
+                    }
                     height={25}
                     width={25}
                     className="rounded-circle"

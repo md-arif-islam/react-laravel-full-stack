@@ -16,7 +16,11 @@ const Profile = () => {
                     <div className="form-row text-center">
                         <div className="col col-12 text-center pb-3">
                             <img
-                                src={avatar}
+                                src={
+                                    user.avatar
+                                        ? `http://localhost:8000/storage/avatars/${user.avatar}`
+                                        : avatar
+                                }
                                 className="img-fluid rounded-circle"
                                 alt=""
                             />

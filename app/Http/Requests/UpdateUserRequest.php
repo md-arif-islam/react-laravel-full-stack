@@ -27,7 +27,6 @@ class UpdateUserRequest extends FormRequest {
             'phone' => [
                 'required',
             ],
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

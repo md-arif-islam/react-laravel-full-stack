@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class SalesmanController extends Controller {
     /**
@@ -34,6 +35,15 @@ class SalesmanController extends Controller {
         $data['role'] = "salesman";
         $user = User::create( $data );
 
+        if ( $request->hasFile( 'avatar' ) ) {
+
+            $avatarPath = time() . '-' . $request->file( 'avatar' )->getClientOriginalName();
+            $request->file( 'avatar' )->storeAs( 'public/avatars', $avatarPath );
+
+            $user->avatar = $avatarPath;
+            $user->save();
+        }
+
         return response( new UserResource( $user ), 201 );
 
     }
@@ -59,13 +69,26 @@ class SalesmanController extends Controller {
      */
     public function update( UpdateUserRequest $request, User $user, $id ) {
 
+        $salesman = User::find( $id );
         $data = $request->validated();
+
         if ( isset( $data['password'] ) ) {
             $data['password'] = bcrypt( $data['password'] );
         }
-        $user->where( "id", $id )->update( $data );
 
-        return new UserResource( $user->where( 'id', $id )->firstOrFail() );
+        $salesman->update( $data );
+
+        if ( $request->hasFile( 'avatar' ) ) {
+
+            $avatarPath = time() . '-' . $request->file( 'avatar' )->getClientOriginalName();
+            $request->file( 'avatar' )->storeAs( 'public/avatars', $avatarPath );
+
+            $salesman->avatar = $avatarPath;
+            $salesman->save();
+        }
+
+        return new UserResource( $salesman->firstOrFail() );
+
     }
 
     /**

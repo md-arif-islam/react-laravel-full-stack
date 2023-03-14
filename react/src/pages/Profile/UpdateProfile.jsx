@@ -7,13 +7,19 @@ import { useStateContext } from "../../context/ContextProvider";
 const UpdateProfile = () => {
     const [showPassword, setShowPassword] = useState(false);
     const { user, setUser } = useStateContext();
-    const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
     const navigate = useNavigate();
+
+    const [file, setFile] = useState(null);
 
     function handleImageClick() {
         document.getElementById("pimgi").click();
     }
+
+    const onChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+    };
 
     function handlePasswordClick() {
         setShowPassword(!showPassword);
@@ -25,12 +31,6 @@ const UpdateProfile = () => {
         }
         input.focus();
     }
-
-    const onChange = () => {
-        document.getElementById("pimg").src = window.URL.createObjectURL(
-            this.files[0]
-        );
-    };
 
     const first_name = useRef();
     const last_name = useRef();
@@ -47,10 +47,15 @@ const UpdateProfile = () => {
             email: email.current.value,
             phone: phone.current.value,
             password: password.current.value,
+            avatar: file,
         };
 
         axiosClient
-            .put(`/profile/${user.id}`, paylod)
+            .post(`/profile/${user.id}`, paylod, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             .then(({ data }) => {
                 setUser(data.data);
                 navigate("/profile");
@@ -74,7 +79,13 @@ const UpdateProfile = () => {
                         <div className="col col-12 text-center pb-3">
                             <img
                                 id="pimg"
-                                src={avatar}
+                                src={
+                                    !file
+                                        ? user.avatar
+                                            ? `http://localhost:8000/storage/avatars/${user.avatar}`
+                                            : avatar
+                                        : URL.createObjectURL(file)
+                                }
                                 className="img-fluid rounded-circle"
                                 onClick={handleImageClick}
                                 alt=""

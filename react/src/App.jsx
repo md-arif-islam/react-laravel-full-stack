@@ -45,10 +45,7 @@ function App() {
 
                     <Route path="/salesmen" element={<Salesmen />} />
                     <Route path="/salesmen/add" element={<AddSalesman />} />
-                    <Route
-                        path="/salesmen/update"
-                        element={<UpdateSalesman />}
-                    />
+                    <Route path="/salesmen/:id" element={<UpdateSalesman />} />
 
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/profile/update" element={<UpdateProfile />} />

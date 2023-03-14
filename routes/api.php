@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ManagerController;
 use App\Http\Controllers\Api\PharmacistController;
 use App\Http\Controllers\Api\ProfileController;
@@ -27,7 +28,6 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     Route::get( '/user', function ( Request $request ) {
         return $request->user();
     } );
-    Route::post( "/logout", [AuthController::class, "logout"] );
 
     Route::get( "/managers", [ManagerController::class, "index"] );
     Route::group( ['middleware' => 'can:isAdmin'], function () {
@@ -38,17 +38,23 @@ Route::middleware( 'auth:sanctum' )->group( function () {
     } );
 
     Route::get( "/pharmacists", [PharmacistController::class, "index"] );
-    Route::post( "/pharmacists", [PharmacistController::class, "store"] );
-    Route::get( "/pharmacists/{id}", [PharmacistController::class, "show"] );
-    Route::post( "/pharmacists/{id}", [PharmacistController::class, "update"] );
-    Route::delete( "/pharmacists/{id}", [PharmacistController::class, "destroy"] );
+    Route::group( ['middleware' => 'can:isAdminOrManager'], function () {
+        Route::post( "/pharmacists", [PharmacistController::class, "store"] );
+        Route::get( "/pharmacists/{id}", [PharmacistController::class, "show"] );
+        Route::post( "/pharmacists/{id}", [PharmacistController::class, "update"] );
+        Route::delete( "/pharmacists/{id}", [PharmacistController::class, "destroy"] );
+    } );
 
     Route::get( "/salesmen", [SalesmanController::class, "index"] );
-    Route::post( "/salesmen", [SalesmanController::class, "store"] );
-    Route::get( "/salesmen/{id}", [SalesmanController::class, "show"] );
-    Route::post( "/salesmen/{id}", [SalesmanController::class, "update"] );
-    Route::delete( "/salesmen/{id}", [SalesmanController::class, "destroy"] );
+    Route::group( ['middleware' => ['can:isAdminOrManagerOrPharmacist']], function () {
+        Route::post( "/salesmen", [SalesmanController::class, "store"] );
+        Route::get( "/salesmen/{id}", [SalesmanController::class, "show"] );
+        Route::post( "/salesmen/{id}", [SalesmanController::class, "update"] );
+        Route::delete( "/salesmen/{id}", [SalesmanController::class, "destroy"] );
+    } );
 
     Route::post( "/profile/{id}", [ProfileController::class, "update"] );
+    Route::post( "/logout", [AuthController::class, "logout"] );
+    Route::get( "/dashboard", [DashboardController::class, "index"] );
 
 } );

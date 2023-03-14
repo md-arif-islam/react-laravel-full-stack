@@ -18,7 +18,7 @@ class PharmacistController extends Controller {
     public function index() {
 
         return UserResource::collection(
-            User::where( "role", "pharmacist" )->orderBy( "id", "DESC" )->paginate( 10 )
+            User::where( "role", "pharmacist" )->orderBy( "id", "ASC" )->paginate( 10 )
         );
     }
 

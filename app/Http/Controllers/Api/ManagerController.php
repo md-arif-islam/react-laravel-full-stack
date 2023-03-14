@@ -18,7 +18,7 @@ class ManagerController extends Controller {
     public function index() {
 
         return UserResource::collection(
-            User::where( "role", "manager" )->orderBy( "id", "DESC" )->paginate( 10 )
+            User::where( "role", "manager" )->orderBy( "id", "ASC" )->paginate( 10 )
         );
     }
 

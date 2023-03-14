@@ -5,14 +5,26 @@ import axiosClient from "../../axios-client";
 import { useStateContext } from "../../context/ContextProvider";
 
 const UpdatePharmacist = () => {
-    const handleImageClick = () => {
+    const [file, setFile] = useState(null);
+    const [user, setUser] = useState({
+        id: null,
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        avatar: "",
+    });
+    function handleImageClick() {
         document.getElementById("pimgi").click();
-    };
+    }
 
-    const onChange = () => {
-        document.getElementById("pimg").src = window.URL.createObjectURL(
-            this.files[0]
-        );
+    const onChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
+        setUser({
+            ...user,
+            avatar: selectedFile,
+        });
     };
 
     const navigate = useNavigate();
@@ -21,14 +33,6 @@ const UpdatePharmacist = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
     const { setNotification } = useStateContext();
-
-    const [user, setUser] = useState({
-        id: null,
-        first_name: "",
-        last_name: "",
-        email: "",
-        phone: "",
-    });
 
     if (id) {
         useEffect(() => {
@@ -47,8 +51,14 @@ const UpdatePharmacist = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+
+        console.log(user);
         axiosClient
-            .put(`/pharmacists/${user.id}`, user)
+            .post(`/pharmacists/${user.id}`, user, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             .then(() => {
                 setNotification("Upadated Successfully");
                 navigate("/pharmacists");
@@ -64,7 +74,6 @@ const UpdatePharmacist = () => {
     return (
         <div className="pharmacist">
             <div className="updatePharmacist">
-                {console.log(user)}
                 {!loading && (
                     <div className="main__form">
                         <div className="main__form--title text-center">
@@ -89,17 +98,23 @@ const UpdatePharmacist = () => {
                                 <div className="col col-12 text-center pb-3">
                                     <img
                                         id="pimg"
-                                        src={avatar}
+                                        src={
+                                            !file
+                                                ? user.avatar
+                                                    ? `http://localhost:8000/storage/avatars/${user.avatar}`
+                                                    : avatar
+                                                : URL.createObjectURL(file)
+                                        }
                                         className="img-fluid rounded-circle"
                                         onClick={handleImageClick}
                                         alt=""
                                     />
                                     <i className="fas fa-pen pimgedit" />
                                     <input
+                                        type="file"
                                         onChange={onChange}
                                         id="pimgi"
                                         style={{ display: "none" }}
-                                        type="file"
                                         name="avatar"
                                     />
                                 </div>

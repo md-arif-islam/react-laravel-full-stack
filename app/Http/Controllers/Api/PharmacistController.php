@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class PharmacistController extends Controller {
     /**
@@ -34,6 +35,15 @@ class PharmacistController extends Controller {
         $data['role'] = "pharmacist";
         $user = User::create( $data );
 
+        if ( $request->hasFile( 'avatar' ) ) {
+
+            $avatarPath = time() . '-' . $request->file( 'avatar' )->getClientOriginalName();
+            $request->file( 'avatar' )->storeAs( 'public/avatars', $avatarPath );
+
+            $user->avatar = $avatarPath;
+            $user->save();
+        }
+
         return response( new UserResource( $user ), 201 );
 
     }
@@ -59,13 +69,26 @@ class PharmacistController extends Controller {
      */
     public function update( UpdateUserRequest $request, User $user, $id ) {
 
+        $pharmacist = User::find( $id );
         $data = $request->validated();
+
         if ( isset( $data['password'] ) ) {
             $data['password'] = bcrypt( $data['password'] );
         }
-        $user->where( "id", $id )->update( $data );
 
-        return new UserResource( $user->where( 'id', $id )->firstOrFail() );
+        $pharmacist->update( $data );
+
+        if ( $request->hasFile( 'avatar' ) ) {
+
+            $avatarPath = time() . '-' . $request->file( 'avatar' )->getClientOriginalName();
+            $request->file( 'avatar' )->storeAs( 'public/avatars', $avatarPath );
+
+            $pharmacist->avatar = $avatarPath;
+            $pharmacist->save();
+        }
+
+        return new UserResource( $pharmacist->firstOrFail() );
+
     }
 
     /**

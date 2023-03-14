@@ -7,15 +7,15 @@ const AddPharmacist = () => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const [message, setMessage] = useState(null);
+    const [file, setFile] = useState(null);
 
     function handleImageClick() {
         document.getElementById("pimgi").click();
     }
 
-    const onChange = () => {
-        document.getElementById("pimg").src = window.URL.createObjectURL(
-            this.files[0]
-        );
+    const onChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFile(selectedFile);
     };
 
     function handlePasswordClick() {
@@ -44,10 +44,17 @@ const AddPharmacist = () => {
             email: email.current.value,
             phone: phone.current.value,
             password: password.current.value,
+            avatar: file,
         };
 
+        console.log(paylod);
+
         axiosClient
-            .post("/pharmacists", paylod)
+            .post("/pharmacists", paylod, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             .then(() => {
                 navigate("/pharmacists");
             })
@@ -84,7 +91,7 @@ const AddPharmacist = () => {
                         <div className="col col-12 text-center pb-3">
                             <img
                                 id="pimg"
-                                src={avatar}
+                                src={file ? URL.createObjectURL(file) : avatar}
                                 className="img-fluid rounded-circle"
                                 onClick={handleImageClick}
                                 alt=""
@@ -115,6 +122,7 @@ const AddPharmacist = () => {
                                         name="fname"
                                         placeholder="First name"
                                         ref={first_name}
+                                        required
                                     />
                                 </label>
                             </div>

@@ -39,7 +39,7 @@ function App() {
                         element={<AddPharmacist />}
                     />
                     <Route
-                        path="/pharmacists/update"
+                        path="/pharmacists/:id"
                         element={<UpdatePharmacist />}
                     />
 

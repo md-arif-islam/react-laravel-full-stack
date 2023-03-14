@@ -7,8 +7,19 @@ const Login = () => {
     const email = useRef();
     const password = useRef();
     const { setUser, setToken } = useStateContext();
-
+    const [showPassword, setShowPassword] = useState(false);
     const [message, setMessage] = useState(null);
+
+    function handlePasswordClick() {
+        setShowPassword(!showPassword);
+        var input = document.getElementById("pwdinput");
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+        input.focus();
+    }
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -81,6 +92,7 @@ const Login = () => {
                                     />
                                     <i
                                         id="pwd"
+                                        onClick={handlePasswordClick}
                                         className="fas fa-eye right"
                                     ></i>
                                 </label>
